@@ -7,7 +7,7 @@ In this file are the functions that are used to interact with a bloom filter. Th
 2. Check if a certain element is in the bloom filter
 3. View the content of the bloom filter
 
-Bloom
+Bloom filter test
 This file is used to test the Bloom_function. 
 Here we create a bloom filter and fill it with the elements "e", "f" and "m". Then we view the content of the bloom filter. Finaly, we check if the element "qwerty" is in the set. 
 The answer for the final question is yes, but that doesn't mean that the functions are not working properly. We know that bloom filters can return false positive answers and ths is one of theese cases
