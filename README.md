@@ -9,6 +9,7 @@ In this file are the functions that are used to interact with a bloom filter. Th
 3. View the content of the bloom filter
 
 
+
 Bloom filter test
 
 This file is used to test the Bloom_function. 
