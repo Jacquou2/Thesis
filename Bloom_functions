@@ -1,0 +1,84 @@
+from Crypto.Hash import keccak
+import numpy as np
+from bloom_filter_array import bloom_filter
+
+
+
+def Add_Transaction(trans):
+# Adds transaction to the bloom filter
+# trans:string
+
+    log = trans
+
+    keccak_hash = keccak.new(digest_bits=256)
+    keccak_hash.update(log.encode("ASCII"))
+
+    # Calculate hash of input with Keccak-256 hash
+    hash = keccak_hash.hexdigest()[0:6]
+
+
+    # Calculate ACII code of first two hash characters
+    binary_hash1 = bin(ord(hash[0]))[2::].rjust(8, "0") + bin(ord(hash[1]))[2::].rjust(8, "0")
+    # Calculate ACII code of 3rd and 4th hash characters
+    binary_hash2 = bin(ord(hash[2]))[2::].rjust(8, "0") + bin(ord(hash[3]))[2::].rjust(8, "0")
+    # Calculate ACII code of 5th and 6th hash characters
+    binary_hash3 = bin(ord(hash[4]))[2::].rjust(8, "0") + bin(ord(hash[5]))[2::].rjust(8, "0")
+
+    # Keep only the first 11 digits of each variable
+    binary_hash1_eleven = binary_hash1[0:11]
+    binary_hash2_eleven = binary_hash2[0:11]
+    binary_hash3_eleven = binary_hash3[0:11]
+
+    # Convert the variables from binary to decimal and calculate the modulo 2048
+    # The result will be the 3 positions where the Bloom Filter will be filled
+    decimal1 = int(binary_hash1_eleven, 2) % 2048
+    decimal2 = int(binary_hash2_eleven, 2) % 2048
+    decimal3 = int(binary_hash3_eleven, 2) % 2048
+
+    # Update the bloom filter
+    bloom_filter[decimal1] = 1
+    bloom_filter[decimal2] = 1
+    bloom_filter[decimal3] = 1
+
+def bloom_View():
+# Print Statistics about the bloom filter
+    print("Bloom filter has ",len(np.where(bloom_filter == 1)[0])," ones")
+    print("They are located in ",np.where(bloom_filter == 1)[0]," positions")
+    print("Bloom filter is ","%.2f" % (len(np.where(bloom_filter == 1)[0])/2.0480),"% filled\n")
+
+def Check_membership(trans):
+# Checks if a transaction is in the bloom filter and prints the output
+# trans: string
+    log = trans
+
+    keccak_hash = keccak.new(digest_bits=256)
+    keccak_hash.update(log.encode("ASCII"))
+
+    # Calculate hash of input with Keccak-256 hash
+    hash = keccak_hash.hexdigest()[0:6]
+
+
+    # Calculate ACII code of first two hash characters
+    binary_hash1 = bin(ord(hash[0]))[2::].rjust(8, "0") + bin(ord(hash[1]))[2::].rjust(8, "0")
+    # Calculate ACII code of 3rd and 4th hash characters
+    binary_hash2 = bin(ord(hash[2]))[2::].rjust(8, "0") + bin(ord(hash[3]))[2::].rjust(8, "0")
+    # Calculate ACII code of 5th and 6th hash characters
+    binary_hash3 = bin(ord(hash[4]))[2::].rjust(8, "0") + bin(ord(hash[5]))[2::].rjust(8, "0")
+
+    # Keep only the first 11 digits of each variable
+    binary_hash1_eleven = binary_hash1[0:11]
+    binary_hash2_eleven = binary_hash2[0:11]
+    binary_hash3_eleven = binary_hash3[0:11]
+
+    # Convert the variables from binary to decimal and calculate the modulo 2048
+    # The result will be the 3 positions where the Bloom Filter will be filled
+    decimal1 = int(binary_hash1_eleven, 2) % 2048
+    decimal2 = int(binary_hash2_eleven, 2) % 2048
+    decimal3 = int(binary_hash3_eleven, 2) % 2048
+
+    if bloom_filter[decimal1] & bloom_filter[decimal2] & bloom_filter[decimal3]:
+        print("\033[92m {}\033[00m".format("The transaction could be in the this block"))
+    else:
+        print("\033[91m {}\033[00m".format("The transaction is definately not in this Block"))
+
+
