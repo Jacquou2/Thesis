@@ -1,7 +1,7 @@
 from Crypto.Hash import keccak
 import numpy as np
-from bloom_filter_array import bloom_filter
 
+bloom_filter = np.zeros(2048, dtype=int)
 
 
 def Add_Transaction(trans):
