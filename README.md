@@ -1,17 +1,13 @@
 # geordrak2
-There are two files in this repo. Their functionality is explained below
+This repo is about viewing the performance of the Element retrieval in a blockchain. 
+Two methods are compared here, the brute force method in which every item in every block is checked and the bloom filter method in which only the blocks with positive bloom filter resposes are checked.
+The performance is compared in a blockchains that have [1, 10, 100, 1000, 10000, 100000] blocks and [1, 10, 100, 1000, 10000, 100000] elements in each block.
+Every combination of the parameters is checked except the one with 100000 blocks and 100000 elements, that is 29 combinations.
+In order to reduce the excecution time, a static database is created and stored in computer memory permanently. 
+Due to limited computer memory the blockchain with 100000 blocks and 100000 elements is not stored, as it requires more than 20Gb.
 
-Bloom_functions
+The results of this performance test are ploted in a heatmap. In the position where the missing combination is, 0 is placed. 
+The results are calculated in seconds.
 
-In this file are the functions that are used to interact with a bloom filter. These functions can be used to:
-1. Add an element to the bloom filter
-2. Check if a certain element is in the bloom filter
-3. View the content of the bloom filter
-
-
-
-Bloom filter test
-
-This file is used to test the Bloom_function. 
-Here we create a bloom filter and fill it with the elements "e", "f" and "m". Then we view the content of the bloom filter. Finaly, we check if the element "qwerty" is in the set. 
-The answer for the final question is yes, but that doesn't mean that the functions are not working properly. We know that bloom filters can return false positive answers and ths is one of theese cases
+This repo has 2 files, the bf_function.py file contains the classes and finctions that are used in the bloom_filter_LD.py file.
+The bloom_filter_LD.py file is the one that should be compiled
