@@ -1,8 +1,6 @@
-from eth_bloom import BloomFilter
-from bf_function import Compare_BF_BF, Create_Blockchain_Data, Loaded_Blockchain, Test_Loaded_Blockchain_Time_performance
+from bf_function import Test_Loaded_Blockchain_Time_performance
 import matplotlib.pyplot as plt
 import numpy as np
-import time
 from numpy import transpose
 
 
@@ -29,39 +27,56 @@ from numpy import transpose
 ##  ## THE PERFORMANCE TEST BEGINS HERE  ##  ##
 
 
-## The Number_of_Blocks_toTest and the Number_of_Elements_toTest lists contain the elements on which the performance
-## of the Brute force and the Bloom filter methods will be tested.
-## The Every possible combination of these parameters will be tested, except the one for 10000 blocks of 10000 elements,
-## due to memory constrains.
-Number_of_Blocks_toTest = [1, 10, 100, 1000, 10000]
-Number_of_Elements_toTest = [1, 10, 100, 1000, 10000, 100000]
+# To have more robust results we repeat the performance test iteration_times(variable) times and store the mean
+# of the results. The differences in the results between each performance test are small but not insignificant
+iteration_times = 20
 
-## To test the performance, the Test_Loaded_Blockchain_Time_performance function is used. The queried element is not
-## located on the blockchain.
-## The BruteForce_list is a 2d list on which the execution times for the Brute Force method are stored.
-## The BloomFilter_list is a 2d list on which the execution times for the Bloom Filter method are stored.
-## On the place where the mising combination should be, 0 is placed.
-## The rows of the 2d lists that are created are the number of elements in each block, while the columns are the number of blocks
-BruteForce_list, BloomFilter_list, BruteTime, BloomTime = Test_Loaded_Blockchain_Time_performance([1, 10, 100, 1000, 10000], [1, 10, 100, 1000, 10000], b'query')
-BruteForce_list_Comp, BloomFilter_list_Comp, BruteTime_Comp, BloomTime_Comp = Test_Loaded_Blockchain_Time_performance([1, 10, 100, 1000],[100000], b'query')
+# The Final_BruteForce_list and Final_BloomFilter_list are the lists in which the mean of the results of each iteration
+# are stored
+Final_BruteForce_list = np.zeros((6, 5))
+Final_BloomFilter_list = np.zeros((6, 5))
+for i in range(iteration_times):
+    ## The Number_of_Blocks_toTest and the Number_of_Elements_toTest lists contain the elements on which the performance
+    ## of the Brute force and the Bloom filter methods will be tested.
+    ## The Every possible combination of these parameters will be tested, except the one for 10000 blocks of 10000 elements,
+    ## due to memory constrains.
+    Number_of_Blocks_toTest = [1, 10, 100, 1000, 10000]
+    Number_of_Elements_toTest = [1, 10, 100, 1000, 10000, 100000]
 
-BruteForce_list[0].append(BruteForce_list_Comp[0][0])
-BruteForce_list[1].append(BruteForce_list_Comp[1][0])
-BruteForce_list[2].append(BruteForce_list_Comp[2][0])
-BruteForce_list[3].append(BruteForce_list_Comp[3][0])
-BruteForce_list[4].append(0)
-BloomFilter_list[0].append(BloomFilter_list_Comp[0][0])
-BloomFilter_list[1].append(BloomFilter_list_Comp[1][0])
-BloomFilter_list[2].append(BloomFilter_list_Comp[2][0])
-BloomFilter_list[3].append(BloomFilter_list_Comp[3][0])
-BloomFilter_list[4].append(0)
+    ## To test the performance, the Test_Loaded_Blockchain_Time_performance function is used. The queried element is not
+    ## located on the blockchain.
+    ## The BruteForce_list is a 2d list on which the execution times for the Brute Force method are stored.
+    ## The BloomFilter_list is a 2d list on which the execution times for the Bloom Filter method are stored.
+    ## On the place where the mising combination should be, 0 is placed.
+    ## The rows of the 2d lists that are created are the number of elements in each block, while the columns are the number of blocks
+    BruteForce_list, BloomFilter_list, BruteTime, BloomTime = Test_Loaded_Blockchain_Time_performance([1, 10, 100, 1000, 10000], [1, 10, 100, 1000, 10000], b'query')
+    BruteForce_list_Comp, BloomFilter_list_Comp, BruteTime_Comp, BloomTime_Comp = Test_Loaded_Blockchain_Time_performance([1, 10, 100, 1000],[100000], b'query')
 
-BruteTime += BruteTime_Comp
-BloomTime += BloomTime_Comp
+    BruteForce_list[0].append(BruteForce_list_Comp[0][0])
+    BruteForce_list[1].append(BruteForce_list_Comp[1][0])
+    BruteForce_list[2].append(BruteForce_list_Comp[2][0])
+    BruteForce_list[3].append(BruteForce_list_Comp[3][0])
+    BruteForce_list[4].append(0)
+    BloomFilter_list[0].append(BloomFilter_list_Comp[0][0])
+    BloomFilter_list[1].append(BloomFilter_list_Comp[1][0])
+    BloomFilter_list[2].append(BloomFilter_list_Comp[2][0])
+    BloomFilter_list[3].append(BloomFilter_list_Comp[3][0])
+    BloomFilter_list[4].append(0)
+
+    BruteTime += BruteTime_Comp
+    BloomTime += BloomTime_Comp
 
 
-BruteForce_list = transpose(np.array(BruteForce_list))
-BloomFilter_list = transpose(np.array(BloomFilter_list))
+    BruteForce_list = transpose(np.array(BruteForce_list))
+    BloomFilter_list = transpose(np.array(BloomFilter_list))
+
+    Final_BruteForce_list = np.add(Final_BruteForce_list, BruteForce_list)
+    Final_BloomFilter_list = np.add(Final_BloomFilter_list, BloomFilter_list)
+
+
+Final_BruteForce_list = Final_BruteForce_list / iteration_times
+Final_BloomFilter_list = Final_BloomFilter_list / iteration_times
+
 
 
 print("Resutls of the Brute Force Method:",BruteForce_list)
@@ -71,8 +86,8 @@ print("Execution time of the Bloom Filter Method is",BloomTime,"seconds")
 
 
 ## To Visualize the results, a heatmap of the performance of each method is ploted
-data1 = BloomFilter_list
-data2 = BruteForce_list
+data1 = Final_BloomFilter_list
+data2 = Final_BruteForce_list
 
 fig, (ax1, ax2) = plt.subplots(1, 2)
 fig.suptitle('Performance Comparison (seconds)')
@@ -110,3 +125,7 @@ fig.tight_layout()
 plt.show()
 
 ##  ## THE PERFORMANCE TEST ENDS HERE  ##  ##
+
+
+
+
