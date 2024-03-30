@@ -2,11 +2,7 @@ from eth_bloom import BloomFilter
 import random
 import time
 from numpy import transpose
-import matplotlib.pyplot as plt
-import numpy as np
 import os
-import csv
-import linecache as lc
 
 
 
