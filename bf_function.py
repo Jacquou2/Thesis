@@ -6,7 +6,7 @@ import os
 
 
 
-
+# This class is used for testing the performance of the Brute force and the Bloom filter element retrieval methods
 class Loaded_Blockchain:
     def __init__(self,Number_of_blocks: int, Number_of_elements: int) -> None:
 
@@ -162,16 +162,21 @@ class Loaded_Blockchain:
         #         self.Element_retrieved_BloomFilter = element
 
 
-
+# This class is used only for the creation of the blockchain database in the Create_Blockchain_Data function
 class Blockchain:
     def __init__(self, NumOfBlocks: int, NumOfElements: int) -> None:
-        self.NumOfElements = NumOfElements
+        # When an object of the Blockchain class is created, the following variables are initialized
+        # The NumOfBlocks and NumOfElements variables are provided when the object is created and refer to the number of
+        # blocks in the blockchain object and the number of elements in each block
         self.NumOfBlocks = NumOfBlocks
+        self.NumOfElements = NumOfElements
+        # The Blocks list contains all the blocks in the blockchain. The blocks are objects of the Block class. 
         self.Blocks = []
         for i in range(self.NumOfBlocks):
             self.Blocks.append(Block(self.NumOfElements,i))
 
-
+    
+    # The following functions inside the Blockchain class are not used.
     def Retrieve_Element(self,Element):
         start = time.time()
         Block_Numbers = []
@@ -192,8 +197,6 @@ class Blockchain:
         ExTime = (end - start)*(10**3)
         return Block_Numbers, ExTime
 
-
-
     def Check_BFs_Element(self,Element):
         Block_Numbers = []
         for count, block in enumerate(self.Blocks):
@@ -201,7 +204,6 @@ class Blockchain:
             if(block.Check_BF_Element(Element)):
                 Block_Numbers.append(count)
         return Block_Numbers
-
 
     def Retrieve_Element2(self,Element):
         start = time.time()
@@ -215,25 +217,28 @@ class Blockchain:
         return BlockNumbers, ExTime
 
 
-
+# This class is used only for the creation of the blockchain database in the Create_Blockchain_Data function
 class Block:
     def __init__(self, NumOfElements: int, seed: int) -> None:
+        # When an object of the Block class is created, the following variables are initialized
+        # The NumOfElements variable refers to the number of elements the block object will have.
+        # The seed variable is the seed number for the creation of the random data
+        # The Bloom_Filter is the bloom filter that is created for the elements of that object
         self.NumOfElements = NumOfElements
         self.Bloom_Filter = BloomFilter()
+        
+        # The Elements list contains all the elements in the block object.
         self.Elements = []
         random.seed(seed)
+        
+        # In this for loop the random elements are created and stored, in the form of bytes, in the ELements list.
+        # The elements are also added in the bloom filter 
         for x in range(self.NumOfElements):
             i = bytes(str(random.random()), 'utf-8')
             self.Bloom_Filter.add(i)
             self.Elements.append(i)
 
-    # def Initialize_Block(self):
-    #     for x in range(self.NumOfElements):
-    #         i = bytes(str(random.random()), 'utf-8')
-    #         self.Bloom_Filter.add(i)
-    #         self.Elements.append(i)
-    #     return self
-
+    # The following functions inside the Block class are not used.
     def Add_Element(self,element):
         self.Bloom_Filter.add(element)
         self.Elements.append(element)
@@ -261,7 +266,7 @@ class Block:
         return bloom_filter_response
 
 
-
+# This function is not used, and can be ignored
 def Compare_BF_BF(list_of_Elements: list, list_of_BFnumber:list, word:bytes):
     Temp_Res_array1 = []
     Temp_Res_array2 = []
@@ -312,9 +317,7 @@ def Compare_BF_BF(list_of_Elements: list, list_of_BFnumber:list, word:bytes):
     return BloomFilter_Result, BruteForce_Result, Ex1, Ex2
 
 
-
-
-
+# This function is used only for the creation of the blockchain database
 def Create_Blockchain_Data(Num_Of_Blocks: int,Num_Of_Elements: int) -> None:
     ## This function creates blockchain data and stores them locally.
     ## The number of blocks in the blockchain and the number of Elements in each block must be specified
@@ -355,7 +358,7 @@ def Create_Blockchain_Data(Num_Of_Blocks: int,Num_Of_Elements: int) -> None:
 
 
 
-
+# This function is used for testing the performance of the Brute force and the Bloom filter element retrieval methods
 def Test_Loaded_Blockchain_Time_performance(list_of_number_of_Blocks:list, list_of_number_of_Elements: list, element:bytes):
     # This function returns the execution time of the Retrieve_Element_BruteForce and the Retrieve_Element_BloomFIlter function
     # of the Loaded_Blockchain class for a number of Loaded_Blockchain objects. Each object deffers in the number of blocks and
