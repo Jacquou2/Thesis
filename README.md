@@ -1,7 +1,7 @@
 # geordrak2
 This repo is about viewing the performance of the Element retrieval in a blockchain. 
 Two methods are compared here, the brute force method in which every item in every block is checked and the bloom filter method in which only the blocks with positive bloom filter resposes are checked.
-The performance is compared in a blockchains that have [1, 10, 100, 1000, 10000, 100000] blocks and [1, 10, 100, 1000, 10000, 100000] elements in each block.
+The performance is compared in blockchains that have [1, 10, 100, 1000, 10000, 100000] blocks and [1, 10, 100, 1000, 10000, 100000] elements in each block.
 Every combination of the parameters is checked except the one with 100000 blocks and 100000 elements, that is 29 combinations.
 In order to reduce the excecution time, a static database is created and stored in computer memory permanently. 
 Due to limited computer memory the blockchain with 100000 blocks and 100000 elements is not stored, as it requires more than 20Gb.
