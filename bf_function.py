@@ -3,6 +3,7 @@ import random
 import time
 from numpy import transpose
 import os
+import linecache
 
 
 
@@ -92,66 +93,113 @@ class Loaded_Blockchain:
         self.ExTime_check_Bloomfilters = (end - start)  # * (10**3)
 
 
-    def Retrieve_Element_BruteForce(self,element):
-        ## The element variable (bytes) is provided on call and refers to the element to be queried.
-        # This function checks every block in the blockchain for the element(variable) using the Brute force method.
-        # Therefore, every element of every block is individually compared to the element(variable).
-        # When the element(variable) is found in a block, the block number is appended in the Block_numbers_retrieved_BruteForce list
-
+    def Retrieve_Element_BruteForce(self, element):
         start = time.time()
         Block_Element_file = open(self.path + "/" + self.Block_element_filename, "r")
-        for i in range(self.Number_of_blocks):
-            if str(element) in Block_Element_file.readline():
+
+        lines = Block_Element_file.readlines()
+
+        for i,line in enumerate(lines[::2]):
+            line = list(line.split(","))[:-1]
+            if str(element) in line:
                 self.Block_numbers_retrieved_BruteForce.append(i)
                 self.Element_retrieved_BruteForce = element
-                # break
-            Block_Element_file.readline()
+
 
         Block_Element_file.close()
         end = time.time()
         self.ExTime_retrieve_BruteForce = (end - start) # * (10 ** 3)
 
 
+    # def Retrieve_Element_BruteForce(self,element):
+    #     ## The element variable (bytes) is provided on call and refers to the element to be queried.
+    #     # This function checks every block in the blockchain for the element(variable) using the Brute force method.
+    #     # Therefore, every element of every block is individually compared to the element(variable).
+    #     # When the element(variable) is found in a block, the block number is appended in the Block_numbers_retrieved_BruteForce list
+    #
+    #     start = time.time()
+    #     Block_Element_file = open(self.path + "/" + self.Block_element_filename, "r")
+    #     for i in range(self.Number_of_blocks):
+    #         if str(element) in Block_Element_file.readline():
+    #             self.Block_numbers_retrieved_BruteForce.append(i)
+    #             self.Element_retrieved_BruteForce = element
+    #             # break
+    #
+    #         # Block_Element_file.readline()
+    #         next(Block_Element_file)
+    #         # Block_Element_file.seek(i+1)
+    #
+    #     Block_Element_file.close()
+    #     end = time.time()
+    #     self.ExTime_retrieve_BruteForce = (end - start) # * (10 ** 3)
+
+
     def Retrieve_Element_BloomFIlter(self,element):
         start = time.time()
         Bloom_filter_file = open(self.path + "/" + self.Bloom_filter_filename,"r")
         Block_element_file = open(self.path + "/" + self.Block_element_filename, "r")
-        for i in range(self.Number_of_blocks):
+
+        lines = Block_element_file.readlines()
+
+        for i, line in enumerate(lines[::2]):
             Bloom_filter = BloomFilter(int(Bloom_filter_file.readline()))
-            Block_elements = Block_element_file.readline()
-            Bloom_filter_file.readline()
-            Block_element_file.readline()
             if element in Bloom_filter:
-                if str(element) in Block_elements:
+                line = list(line.split(","))[:-1]
+                if str(element) in line:
                     self.Block_numbers_retrieved_BloomFilter.append(i)
                     self.Element_retrieved_BloomFilter = element
                     # break
+            next(Bloom_filter_file)
+            
         Bloom_filter_file.close()
         Block_element_file.close()
         end = time.time()
         self.ExTime_retrieve_BloomFilter = (end - start)  # * (10**3)
 
 
-
     def Retrieve_Element_BloomFIlter2(self,element):
-        ## The element variable (bytes) is provided on call and refers to the element to be queried.
-        # This function checks only the blocks in the blockchain that have a positive bloom filter response for the element(variable).
-        # Therefore, not every element of every block is compared to the element(variable).
-        # When the element(variable) is found in a block, the block number is appended in the Block_numbers_retrieved_BruteForce list
-
         start = time.time()
         self.Check_bloom_filters_for_element(element)
-        Block_Element_file = open(self.path + "/" + self.Block_element_filename, "r")
+        Block_numbers_of_positive_BF = self.Block_numbers_of_positive_BF
+        Block_element_file = open(self.path + "/" + self.Block_element_filename, "r")
 
-        for i,line in enumerate(Block_Element_file):
-            if i/2 in self.Block_numbers_of_positive_BF:
+        lines = Block_element_file.readlines()
+
+
+        for i, line in enumerate(lines[::2]):
+            if i in Block_numbers_of_positive_BF:
+                line = list(line.split(","))[:-1]
                 if str(element) in line:
-                    self.Block_numbers_retrieved_BloomFilter2.append(int(i/2))
+                    self.Block_numbers_retrieved_BloomFilter2.append(i)
                     self.Element_retrieved_BloomFilter2 = element
                     # break
 
+
+        Block_element_file.close()
         end = time.time()
-        self.ExTime_retrieve_BloomFilter2 = (end - start) # * (10 ** 3)
+        self.ExTime_retrieve_BloomFilter2 = (end - start)  # * (10**3)
+
+
+
+    # def Retrieve_Element_BloomFIlter2(self,element):
+    #     ## The element variable (bytes) is provided on call and refers to the element to be queried.
+    #     # This function checks only the blocks in the blockchain that have a positive bloom filter response for the element(variable).
+    #     # Therefore, not every element of every block is compared to the element(variable).
+    #     # When the element(variable) is found in a block, the block number is appended in the Block_numbers_retrieved_BruteForce list
+    #
+    #     start = time.time()
+    #     self.Check_bloom_filters_for_element(element)
+    #     Block_Element_file = open(self.path + "/" + self.Block_element_filename, "r")
+    #
+    #     for i,line in enumerate(Block_Element_file):
+    #         if i/2 in self.Block_numbers_of_positive_BF:
+    #             if str(element) in line:
+    #                 self.Block_numbers_retrieved_BloomFilter2.append(int(i/2))
+    #                 self.Element_retrieved_BloomFilter2 = element
+    #                 # break
+    #
+    #     end = time.time()
+    #     self.ExTime_retrieve_BloomFilter2 = (end - start) # * (10 ** 3)
 
 
 
@@ -170,12 +218,12 @@ class Blockchain:
         # blocks in the blockchain object and the number of elements in each block
         self.NumOfBlocks = NumOfBlocks
         self.NumOfElements = NumOfElements
-        # The Blocks list contains all the blocks in the blockchain. The blocks are objects of the Block class. 
+        # The Blocks list contains all the blocks in the blockchain. The blocks are objects of the Block class.
         self.Blocks = []
         for i in range(self.NumOfBlocks):
             self.Blocks.append(Block(self.NumOfElements,i))
 
-    
+
     # The following functions inside the Blockchain class are not used.
     def Retrieve_Element(self,Element):
         start = time.time()
@@ -226,13 +274,13 @@ class Block:
         # The Bloom_Filter is the bloom filter that is created for the elements of that object
         self.NumOfElements = NumOfElements
         self.Bloom_Filter = BloomFilter()
-        
+
         # The Elements list contains all the elements in the block object.
         self.Elements = []
         random.seed(seed)
-        
+
         # In this for loop the random elements are created and stored, in the form of bytes, in the ELements list.
-        # The elements are also added in the bloom filter 
+        # The elements are also added in the bloom filter
         for x in range(self.NumOfElements):
             i = bytes(str(random.random()), 'utf-8')
             self.Bloom_Filter.add(i)
@@ -402,8 +450,8 @@ def Test_Loaded_Blockchain_Time_performance(list_of_number_of_Blocks:list, list_
     for number_of_Blocks in list_of_number_of_Blocks:
         for number_of_Elements in list_of_number_of_Elements:
             Tested_Blockchain = Loaded_Blockchain(number_of_Blocks, number_of_Elements)
-            Tested_Blockchain.Retrieve_Element_BloomFIlter(element)
-            Temp_REBloomFilter_array.append(Tested_Blockchain.ExTime_retrieve_BloomFilter)
+            Tested_Blockchain.Retrieve_Element_BloomFIlter2(element)
+            Temp_REBloomFilter_array.append(Tested_Blockchain.ExTime_retrieve_BloomFilter2)
 
         REBloomFilter_result_array.append(Temp_REBloomFilter_array)
         Temp_REBloomFilter_array = []
