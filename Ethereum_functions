@@ -17,7 +17,7 @@ def Scrap_Blockchain_Data(Starting_block: int, Ending_block: int) -> None:
     web3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/b2fe92b1dfff4b16a651eb5353bc0dd2'))
 
     # path: local path
-    path = "C:/Users/user/PycharmProjects/Bloom Filters/Scrap Blockchain Database/"
+    path = "LOCAL PATH"
 
 
     # File_BloomFilters: file in which the bloom filters are stored
@@ -128,7 +128,7 @@ def Log_Retrieval_bloom_filter(address: str, topics: list, Starting_block: int, 
     # one for the corresponding log indexes in each block.
     # If the log is not found, the function returns two empty lists
 
-    path = "C:/Users/user/PycharmProjects/Bloom Filters/Scrap Blockchain Database/"
+    path = "LOCAL PATH"
 
     File_Logs = open(path + "Logs for blocks " + str(Starting_block) + " to " + str(Ending_block), "r")
     File_BloomFilters = open(path + "Bloom filters for blocks " + str(Starting_block)+ " to "+ str(Ending_block), "r")
@@ -180,7 +180,7 @@ def Log_Retrieval_brute_force(address: str, topics: list, Starting_block: int, E
     # one for the corresponding log indexes in each block.
     # If the log is not found, the function returns two empty lists
 
-    path = "C:/Users/user/PycharmProjects/Bloom Filters/Scrap Blockchain Database/"
+    path = "LOCAL PATH"
     File_Logs = open(path + "Logs for blocks " + str(Starting_block) + " to " + str(Ending_block), "r")
 
     blocks_of_found_element = []
@@ -234,7 +234,7 @@ def Log_Retrieval_TimeComparison_TopicBased_Test_plot(Number_of_1_2_3_topic_logs
     Starting_block,Ending_block = Scrap_database
     non_existing_starting_block, non_existing_ending_block = Non_existing_log_database
 
-    path = "C:/Users/user/PycharmProjects/Bloom Filters/Scrap Blockchain Database/"
+    path = "LOCAL PATH"
     File_Logs = open(path + "Logs for blocks " + str(Starting_block) + " to " + str(Ending_block), "r")
 
     All_logs = File_Logs.readlines()
@@ -494,7 +494,7 @@ def Log_Retrieval_TimeComparison_PositionBased_Test_plot(Number_of_1_2_3_topic_l
     number_of_1_topic_logs, number_of_2_topic_logs, number_of_3_topic_logs = Number_of_1_2_3_topic_logs
     Starting_block,Ending_block = Scrap_database
 
-    path = "C:/Users/user/PycharmProjects/Bloom Filters/Scrap Blockchain Database/"
+    path = "LOCAL PATH"
     File_Logs = open(path + "Logs for blocks " + str(Starting_block) + " to " + str(Ending_block), "r")
 
     All_logs = File_Logs.readlines()
