@@ -10,10 +10,14 @@ Two methods are compared here, the brute force method in which every item in eve
 The two methods are compared in fake data and real Ethereum blockchain data. The comparison in real Ethereum data can be offline or online.
 
 ### Fake data
-The performance is compared in blockchains that have [1, 10, 100, 1000, 10000, 100000] blocks and [1, 10, 100, 1000, 10000, 100000] elements in each block.
-Every combination of the parameters is checked except the one with 100000 blocks and 100000 elements, that is 29 combinations.
+In this test random data that do not have any corelation with the Ethereum blockchain are used.
 In order to reduce the excecution time, a static database is created and stored in computer memory permanently. 
-Due to limited computer memory the blockchain with 100000 blocks and 100000 elements is not stored, as it requires more than 20Gb.
+The data that are used in this test are randomly generated numbers. The test requires a database with multiple datasets to run. 
+The datasets are blockchains consisting of random integers that represent the logs. 
+For the data creation, the number of blocks and number of elements must be specified in a list format.
+For example, number of blocks = [1, 10, 100] and number of elemnents = [1, 10, 100].
+In the test, there will be ane blockchain for each possible combination of the two lists, so 9 blockchains in this example.
+The retrieval time of an element that doesn't exist in any of the blockchains will be calculated.
 
 The results of this performance test are ploted in a heatmap. In the position where the missing combination is, 0 is placed. 
 The results are calculated in seconds.
@@ -69,6 +73,7 @@ To run a fake data test, follow the steps:
 First specify the number of blocks and elements in each block that the test should have in the Blocks and Elements_in_each_block lists.
 Then create a dataset for every combination of the lists, like the code bellow
 
+```
 Blocks = [1, 10, 100, 1000, 10000]
 Elements_in_each_block = [1, 10, 100, 1000, 10000]
 
@@ -76,16 +81,17 @@ for elements in Elements_in_each_block:
     for blocks in Blocks:
         print("Blockchain with",blocks,"blocks and", elements,"elements is being created" )
         bf_function.Create_Blockchain_Data(blocks,elements)
-
+```
 
 **test the retrieval time of the random data**
 After the dataset creation, just call the function Test_Loaded_Blockchain_Time_performance that performes the test and returns the results. 
 The arguments of the function are the Number_of_Blocks_toTest, Number_of_Elements_toTest and the word to query.
 The code bellow is an example
-
+```
 BruteForce_list, BloomFilter_list, BruteTime, BloomTime = bf_function.Test_Loaded_Blockchain_Time_performance(Number_of_Blocks_toTest, Number_of_Elements_toTest, b'query')
 
-BruteForce_list and BloomFilter_list can then be ploted in the form of a heatmap as shown in the code in the bloom_filter_LD file
+BruteForce_list and BloomFilter_list can then be ploted in the form of a heatmap as shown in the code in the performance_test_examples.py file
+```
 
 ### Real data topic based test
 To run this test, first scrap two dataset, the main dataset in which the retrieval time will be tested and the second dataset from which the non existing logs are scraped.
@@ -95,28 +101,33 @@ Ethereum_functions.Scrap_Blockchain_Data(Starting_block_number, Ending_block_num
 
 To run the test, use the following code for offline retrieval:
 
+```
 Ethereum_functions.Log_Retrieval_TimeComparison_TopicBased_OfflineTest_plot((Number_of_1_topic_logs, Number_of_2_topic_logs, Number_of_3_topic_logs), (Starting_block_number_Main_Dataset, Ending_block_number_Main_Dataset), (Starting_block_number_Secondary_Dataset, Ending_block_number_Secondary_Dataset))
+```
 
 Or the following code for online retrieval:
 
+```
 Ethereum_functions.Log_Retrieval_TimeComparison_TopicBased_OnlineTest_plot((Number_of_1_topic_logs, Number_of_2_topic_logs, Number_of_3_topic_logs), (Starting_block_number_Main_Dataset, Ending_block_number_Main_Dataset), (Starting_block_number_Secondary_Dataset, Ending_block_number_Secondary_Dataset))
+```
 
 This code produces the plot and stores the individual retrieval times of each element in a file locally
 
 ### Real data position based test
 To run this test, first scrap the dataset in which the retrieval time will be tested.
 To scrap the dataset, use the following code:
-
+```
 Ethereum_functions.Scrap_Blockchain_Data(Starting_block_number, Ending_block_number)
+```
 
 To run the test, use the following code for offline retrieval:
-
+```
 Ethereum_functions.Log_Retrieval_TimeComparison_PositionBased_OfflineTest_plot((Number_of_1_topic_logs, Number_of_2_topic_logs, Number_of_3_topic_logs), (Starting_block_number_Main_Dataset, Ending_block_number_Main_Dataset), (Starting_block_number_Secondary_Dataset, Ending_block_number_Secondary_Dataset))
-
+```
 Or the following code for online retrieval:
-
+```
 Ethereum_functions.Log_Retrieval_TimeComparison_PositionBased_OnlineTest_plot((Number_of_1_topic_logs, Number_of_2_topic_logs, Number_of_3_topic_logs), (Starting_block_number_Main_Dataset, Ending_block_number_Main_Dataset), (Starting_block_number_Secondary_Dataset, Ending_block_number_Secondary_Dataset))
-
+```
 This code produces the plot and stores the individual retrieval times of each element in a file locally
 
 ## Exaples 
