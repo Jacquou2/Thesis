@@ -3,7 +3,8 @@ import random
 import time
 from numpy import transpose
 import os
-import linecache
+import csv
+
 
 
 
@@ -84,7 +85,6 @@ class Loaded_Blockchain:
         Bloom_filter_file = open(self.path + "/" + self.Bloom_filter_filename,"r")
         for i in range(self.Number_of_blocks):
             Bloom_filter = BloomFilter(int(Bloom_filter_file.readline()))
-            Bloom_filter_file.readline()
             if element in Bloom_filter:
                 self.Block_numbers_of_positive_BF.append(i)
                 self.Element_checked_in_BF = element
@@ -95,13 +95,15 @@ class Loaded_Blockchain:
 
     def Retrieve_Element_BruteForce(self, element):
         start = time.time()
-        Block_Element_file = open(self.path + "/" + self.Block_element_filename, "r")
 
+        Block_Element_file = open(self.path + "/" + self.Block_element_filename, "r")
+        # lines = csv.reader(Block_Element_file)
         lines = Block_Element_file.readlines()
 
-        for i,line in enumerate(lines[::2]):
-            line = list(line.split(","))[:-1]
-            if str(element) in line:
+        for i,line in enumerate(lines):
+            line = list(line.split(","))
+            line[-1] = line[-1][:-1]
+            if str(element)[4:-1] in line:
                 self.Block_numbers_retrieved_BruteForce.append(i)
                 self.Element_retrieved_BruteForce = element
 
@@ -139,18 +141,19 @@ class Loaded_Blockchain:
         Bloom_filter_file = open(self.path + "/" + self.Bloom_filter_filename,"r")
         Block_element_file = open(self.path + "/" + self.Block_element_filename, "r")
 
+        lines = csv.reader(Block_element_file)
         lines = Block_element_file.readlines()
 
-        for i, line in enumerate(lines[::2]):
+        for i, line in enumerate(lines):
             Bloom_filter = BloomFilter(int(Bloom_filter_file.readline()))
+            line = list(line.split(","))
+            line[-1] = line[-1][:-1]
             if element in Bloom_filter:
-                line = list(line.split(","))[:-1]
-                if str(element) in line:
+                if str(element)[4:-1] in line:
                     self.Block_numbers_retrieved_BloomFilter.append(i)
                     self.Element_retrieved_BloomFilter = element
-                    # break
-            next(Bloom_filter_file)
-            
+                #     # break
+
         Bloom_filter_file.close()
         Block_element_file.close()
         end = time.time()
@@ -163,13 +166,12 @@ class Loaded_Blockchain:
         Block_numbers_of_positive_BF = self.Block_numbers_of_positive_BF
         Block_element_file = open(self.path + "/" + self.Block_element_filename, "r")
 
-        lines = Block_element_file.readlines()
+        lines = csv.reader(Block_element_file)
 
 
-        for i, line in enumerate(lines[::2]):
+        for i, line in enumerate(lines):
             if i in Block_numbers_of_positive_BF:
-                line = list(line.split(","))[:-1]
-                if str(element) in line:
+                if str(element)[4:-1] in line:
                     self.Block_numbers_retrieved_BloomFilter2.append(i)
                     self.Element_retrieved_BloomFilter2 = element
                     # break
@@ -365,6 +367,7 @@ def Compare_BF_BF(list_of_Elements: list, list_of_BFnumber:list, word:bytes):
     return BloomFilter_Result, BruteForce_Result, Ex1, Ex2
 
 
+
 # This function is used only for the creation of the blockchain database
 def Create_Blockchain_Data(Num_Of_Blocks: int,Num_Of_Elements: int) -> None:
     ## This function creates blockchain data and stores them locally.
@@ -394,11 +397,14 @@ def Create_Blockchain_Data(Num_Of_Blocks: int,Num_Of_Elements: int) -> None:
     # the 1st bloom filter also belongs to the 1st block
     i = 0
     for block in Data:
-        print(i)
-        for element in block.Elements:
-            File_Blockchain_Elements.write(str(element) + ",")
-        File_Blockchain_Elements.write('\n\n')
-        File_Blockchain_BloomFilters.write(str(int(block.Bloom_Filter))+'\n\n')
+        num_of_elements = len(block.Elements)
+        for count, element in enumerate(block.Elements):
+            if count < num_of_elements-1:
+                File_Blockchain_Elements.write(str(element)[4:-1] + ",")
+            elif count == num_of_elements-1:
+                File_Blockchain_Elements.write(str(element)[4:-1])
+        File_Blockchain_Elements.write('\n')
+        File_Blockchain_BloomFilters.write(str(int(block.Bloom_Filter))+'\n')
         i += 1
 
     File_Blockchain_Elements.close()
@@ -450,8 +456,8 @@ def Test_Loaded_Blockchain_Time_performance(list_of_number_of_Blocks:list, list_
     for number_of_Blocks in list_of_number_of_Blocks:
         for number_of_Elements in list_of_number_of_Elements:
             Tested_Blockchain = Loaded_Blockchain(number_of_Blocks, number_of_Elements)
-            Tested_Blockchain.Retrieve_Element_BloomFIlter2(element)
-            Temp_REBloomFilter_array.append(Tested_Blockchain.ExTime_retrieve_BloomFilter2)
+            Tested_Blockchain.Retrieve_Element_BloomFIlter(element)
+            Temp_REBloomFilter_array.append(Tested_Blockchain.ExTime_retrieve_BloomFilter)
 
         REBloomFilter_result_array.append(Temp_REBloomFilter_array)
         Temp_REBloomFilter_array = []
