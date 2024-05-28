@@ -1,3 +1,0 @@
-import Ethereum_functions
-
-Ethereum_functions.Log_Retrieval_TimeComparison_PositionBased_Test_plot((1, 1, 1), (19860000, 19861000))
