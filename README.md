@@ -1,7 +1,7 @@
 # geordrak2
 
 # Ethereum Performance tests
-In this repo the bloom filter retrieval method and the brute force retrieval method are compared
+In this repo the bloom filter retrieval method and the brute force retrieval method are compared. Three test are presented here.
 
 ## Performance tests specifications
 This repo is about viewing the performance of the Element retrieval in a blockchain. 
@@ -125,12 +125,15 @@ Examples of how to run the test can be found in the performance_test_exaples.py 
 The results of the tests should resemble the following
 
 **fake data test**
+
 ![Performance Comparison (iter=20)](https://github.com/Jacquou2/Thesis/assets/115991799/4ba7c000-ebbf-4bba-9756-d99c09ce76a7)
 
 
 **real data topic based test**
+
 ![Performance Comparison Topic based (1000,1000,1000)](https://github.com/Jacquou2/Thesis/assets/115991799/46ff3472-3dae-4ebd-89fb-f8f4b6b57db1)
 
 
 **real data position based test**
+
 ![Performance Comparison Position based (1000,1000,1000)](https://github.com/Jacquou2/Thesis/assets/115991799/68455fbe-f79d-427c-b6a2-53586502b7cc)
