@@ -13,15 +13,15 @@ import time
 # # Elements in each block = 1, 10, 100, 1000, 10000
 # # This database is stored locally in the computer
 # # This process needs to be executed only once, and should be commented # # afterwards
-#
-#
-# Blocks = [1, 10, 100, 1000, 10000]
-# Elements_in_each_block = [1, 10, 100, 1000, 10000]
-#
-# for elements in Elements_in_each_block:
-#     for blocks in Blocks:
-#         print("Blockchain with",blocks,"blocks and", elements,"elements is being created" )
-#         bf_function.Create_Blockchain_Data(blocks,elements)
+
+
+Blocks = [1, 10, 100, 1000, 10000]
+Elements_in_each_block = [1, 10, 100, 1000, 10000]
+
+for elements in Elements_in_each_block:
+    for blocks in Blocks:
+        print("Blockchain with",blocks,"blocks and", elements,"elements is being created" )
+        bf_function.Create_Blockchain_Data(blocks,elements)
 
 
 
@@ -124,8 +124,8 @@ plt.show()
 ##  ##  DATA SCRAPPING  ##  ##
 # # This process needs to be executed only once, and should be commented # # afterwards
 
-# Ethereum_functions.Scrap_Blockchain_Data(19850000, 19850100)
-# Ethereum_functions.Scrap_Blockchain_Data(19860000, 19861000)
+Ethereum_functions.Scrap_Blockchain_Data(19850000, 19850100)
+Ethereum_functions.Scrap_Blockchain_Data(19860000, 19861000)
 
 
 ##  ##  RUN REAL DATA TEST  ##  ##
