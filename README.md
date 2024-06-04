@@ -1,4 +1,4 @@
-# geordrak2
+# Evaluating the Performance of Bloom Filters on the Ethereum Blockchain
 
 # Ethereum Performance tests
 In this repo the bloom filter retrieval method and the brute force retrieval method are compared. Three test are presented here.
